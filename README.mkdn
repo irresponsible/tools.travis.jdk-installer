@@ -1,0 +1,81 @@
+### Not for public consumption
+
+This is a toolkit @kentfredric has thrown together for streamlining
+various aspects of our travis testing and jitpack deployment stacks.
+
+Primarily, its tasked with installing a non-standard JDK
+Implementation, [Zulu](zulu.org) as opposed to the generic
+`openjdk` or `oracle` JDK implementations that is provided by
+most install targets.
+
+It also contains helpers for provisioning [`boot`](boot-clj.com)
+on those targets, and setting up the environment for installing
+dependencies and testing.
+
+### Invocation
+
+This toolkit operates by injecting itself into the target build
+environment to allow more control of that environment through
+commands.
+
+For instance, the following syntax would **not** work as the
+invoked script can't control its calling environment
+
+```yaml
+  install:
+    - ./setup_environment.sh
+```
+
+Instead, this script has to be `source`'d for the real work to
+happen.
+
+```yaml
+before_install:
+  - curl -fsSLo init.sh http://irresponsible.github.io/tools.travis.jdk-installer/init.sh
+  - source init.sh
+```
+
+### Injected Functions
+
+#### `install_jdk "$JDKID"`
+
+This will ensure the JDK specified is injected into `$PATH`
+and configured in `$JAVA_HOME`
+
+```yaml
+before_install:
+  - ...
+  - install_jdk "zulu8"
+```
+
+Valid options:
+
+- `zulu7`
+- `zulu8`
+- `zulu9`
+
+Additonal Valid Options on Travis:
+
+- `oraclejdk8`
+- `openjdk7`
+
+These are only available on travis as they use travis-specific
+logic and assumptions to work.
+
+#### `install_boot`
+
+This will ensure a script will exist that can be called as:
+
+```
+ ./boot
+```
+
+#### `setup_boot_env`
+
+This will inject two variables into your environment that will
+increase the chances of your large dependency stacks being
+installed, and will force a specific version of `boot` overriding
+the one defined in your project.
+
+- `BOOT_VERSION`: A recent boot version
+- `BOOT_JVM_OPTIONS`: `-Xmx2g -client -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xverify:none -XX:+CMSClassUnloadingEnabled`
