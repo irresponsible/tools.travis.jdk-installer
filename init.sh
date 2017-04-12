@@ -6,14 +6,10 @@ eerror() {
 }
 
 install_zulu8() {
-  if [[ ! -v ZULU ]]; then
-    error "ZULU not set"
-    return 1;
-  fi
   mkdir -p "${HOME}/zulu" || return $?
   if [[ ! -f "${HOME}/zulu/bin/java" ]]; then
     einfo "Downloading $ZULU"
-    curl -fsSLo "/tmp/zulu.tar.gz" "http://cdn.azul.com/zulu/bin/${ZULU}-linux_x64.tar.gz" || return $?
+    curl -fsSLo "/tmp/zulu.tar.gz" "http://cdn.azul.com/zulu/bin/${ZULU:-zulu8.20.0.5-jdk8.0.121}-linux_x64.tar.gz" || return $?
     einfo "Unpacking $ZULU"
     tar -C "${HOME}/zulu" --strip-components=1 -xf "/tmp/zulu.tar.gz" || return $?
   fi
@@ -43,10 +39,12 @@ install_jdk() {
 
 install_boot() {
   einfo "install_boot $@"
+  set -x
   if [[ ! -f ./boot ]]; then
     curl -fsSLo boot "https://github.com/boot-clj/boot-bin/releases/download/${BOOT_SH_VERSION:-2.5.2}/boot.sh" || return $?
     chmod 755 boot || return $?
   fi
+  set +x
 }
 
 setup_boot_env() {
