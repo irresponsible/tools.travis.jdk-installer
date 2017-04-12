@@ -17,6 +17,18 @@ install_zulu8() {
   export JAVA_HOME="${HOME}/zulu"
 }
 
+install_zulu9() {
+  mkdir -p "${HOME}/zulu" || return $?
+  if [[ ! -f "${HOME}/zulu/bin/java" ]]; then
+    einfo "Downloading $ZULU"
+    curl -fsSLo "/tmp/zulu.tar.gz" "http://cdn.azul.com/zulu-pre/bin/${ZULU:-zulu9.0.0.11-ea-jdk9.0.0}-linux_x64.tar.gz" || return $?
+    einfo "Unpacking $ZULU"
+    tar -C "${HOME}/zulu" --strip-components=1 -xf "/tmp/zulu.tar.gz" || return $?
+  fi
+  export PATH="${HOME}/zulu/bin:${PATH}"
+  export JAVA_HOME="${HOME}/zulu"
+}
+
 install_jdk() {
   einfo "install_jdk $@"
   case "$1" in
@@ -25,6 +37,12 @@ install_jdk() {
       return $?             ;
       ;;
     zulu8)
+      set -x        ;
+      install_zulu8 ;
+      set +x        ;
+      return $?     ;
+      ;;
+    zulu9)
       set -x        ;
       install_zulu8 ;
       set +x        ;
