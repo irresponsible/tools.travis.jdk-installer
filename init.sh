@@ -44,7 +44,7 @@ install_jdk() {
       ;;
     zulu9)
       set -x        ;
-      install_zulu8 ;
+      install_zulu9 ;
       set +x        ;
       return $?     ;
       ;;
