@@ -5,11 +5,29 @@ eerror() {
   printf "\e[%dm*\e[0m %s\n" 31 "$@"
 }
 
-install_zulu8() {
+ZULU7="zulu7.17.0.5-jdk7.0.131"
+ZULU8="zulu8.20.0.5-jdk8.0.121"
+ZULU9="zulu9.0.0.11-ea-jdk9.0.0"
+
+install_zulu7() {
   mkdir -p "${HOME}/zulu" || return $?
+  ZULU="${ZULU:-$ZULU7}"
   if [[ ! -f "${HOME}/zulu/bin/java" ]]; then
     einfo "Downloading $ZULU"
-    curl -fsSLo "/tmp/zulu.tar.gz" "http://cdn.azul.com/zulu/bin/${ZULU:-zulu8.20.0.5-jdk8.0.121}-linux_x64.tar.gz" || return $?
+    curl -fsSLo "/tmp/zulu.tar.gz" "http://cdn.azul.com/zulu/bin/${ZULU}-linux_x64.tar.gz" || return $?
+    einfo "Unpacking $ZULU"
+    tar -C "${HOME}/zulu" --strip-components=1 -xf "/tmp/zulu.tar.gz" || return $?
+  fi
+  export PATH="${HOME}/zulu/bin:${PATH}"
+  export JAVA_HOME="${HOME}/zulu"
+}
+
+install_zulu8() {
+  mkdir -p "${HOME}/zulu" || return $?
+  ZULU="${ZULU:-$ZULU8}"
+  if [[ ! -f "${HOME}/zulu/bin/java" ]]; then
+    einfo "Downloading $ZULU"
+    curl -fsSLo "/tmp/zulu.tar.gz" "http://cdn.azul.com/zulu/bin/${ZULU}-linux_x64.tar.gz" || return $?
     einfo "Unpacking $ZULU"
     tar -C "${HOME}/zulu" --strip-components=1 -xf "/tmp/zulu.tar.gz" || return $?
   fi
@@ -19,9 +37,10 @@ install_zulu8() {
 
 install_zulu9() {
   mkdir -p "${HOME}/zulu" || return $?
+  ZULU="${ZULU:-$ZULU9}"
   if [[ ! -f "${HOME}/zulu/bin/java" ]]; then
     einfo "Downloading $ZULU"
-    curl -fsSLo "/tmp/zulu.tar.gz" "http://cdn.azul.com/zulu-pre/bin/${ZULU:-zulu9.0.0.11-ea-jdk9.0.0}-linux_x64.tar.gz" || return $?
+    curl -fsSLo "/tmp/zulu.tar.gz" "http://cdn.azul.com/zulu-pre/bin/${ZULU}-linux_x64.tar.gz" || return $?
     einfo "Unpacking $ZULU"
     tar -C "${HOME}/zulu" --strip-components=1 -xf "/tmp/zulu.tar.gz" || return $?
   fi
@@ -35,6 +54,12 @@ install_jdk() {
     oraclejdk8|openjdk7)
       jdk_switcher use "$1" ;
       return $?             ;
+      ;;
+    zulu7)
+      set -x        ;
+      install_zulu7 ;
+      set +x        ;
+      return $?     ;
       ;;
     zulu8)
       set -x        ;
