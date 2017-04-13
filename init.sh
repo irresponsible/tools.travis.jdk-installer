@@ -93,6 +93,6 @@ install_boot() {
 setup_boot_env() {
   set -x
   export BOOT_VERSION="${BOOT_VERSION:-2.7.1}"
-  export BOOT_JVM_OPTIONS="-Xmx2g -client -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xverify:none -XX:+CMSClassUnloadingEnabled"
+  export BOOT_JVM_OPTIONS="-Xmx4g -client -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xverify:none -XX:+CMSClassUnloadingEnabled"
   set +x
 }
