@@ -6,7 +6,7 @@ eerror() {
 }
 
 ZULU7="zulu7.17.0.5-jdk7.0.131"
-ZULU8="zulu8.20.0.5-jdk8.0.121"
+ZULU8="zulu8.21.0.1-jdk8.0.131"
 ZULU9="zulu9.0.0.11-ea-jdk9.0.0"
 
 install_zulu7() {
