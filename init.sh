@@ -5,7 +5,7 @@ eerror() {
   printf "\e[%dm*\e[0m %s\n" 31 "$@"
 }
 
-ZULU7="zulu7.17.0.5-jdk7.0.131"
+ZULU7="zulu7.18.0.3-jdk7.0.141"
 ZULU8="zulu8.21.0.1-jdk8.0.131"
 ZULU9="zulu9.0.0.11-ea-jdk9.0.0"
 
