@@ -5,6 +5,8 @@ eerror() {
   printf "\e[%dm*\e[0m %s\n" 31 "$@"
 }
 
+CLOJURE_18="1.8.0"
+CLOJURE_19="1.9.0-alpha16"
 ZULU7="zulu7.18.0.3-jdk7.0.141"
 ZULU8="zulu8.21.0.1-jdk8.0.131"
 ZULU9="zulu9.0.0.11-ea-jdk9.0.0"
@@ -94,5 +96,20 @@ setup_boot_env() {
   set -x
   export BOOT_VERSION="${BOOT_VERSION:-2.7.1}"
   export BOOT_JVM_OPTIONS="-Xmx4g -client -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xverify:none -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=1g"
+  if [[ -n "${CLOJURE}" ]]; then
+    case "${CLOJURE}" in
+      "1.8")
+        einfo "Using Clojure ${CLOJURE_18}"
+        export BOOT_CLOJURE_VERSION="${CLOJURE_18}"
+        ;;
+      "1.9")
+        einfo "Using Clojure ${CLOJURE_19}"
+        export BOOT_CLOJURE_VERSION="${CLOJURE_19}"
+        ;;
+      *)
+        eerror "Unknown Clojure target ${CLOJURE}"
+        ;;
+    esac
+  fi
   set +x
 }
