@@ -95,7 +95,7 @@ install_boot() {
 setup_boot_env() {
   set -x
   export BOOT_VERSION="${BOOT_VERSION:-2.7.1}"
-  export BOOT_JVM_OPTIONS="-Xmx4g -client -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xverify:none -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=1g"
+  export BOOT_JVM_OPTIONS="-Xmx4g -client -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xverify:none -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=1g -XX:-OmitStackTraceInFastThrow"
   if [[ -n "${CLOJURE}" ]]; then
     case "${CLOJURE}" in
       "1.8")
