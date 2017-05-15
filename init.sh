@@ -141,6 +141,23 @@ _boot-driver-install-deps() {
   return $ret
 }
 
+_boot-driver-test() {
+  set -x
+  if grep -q 'deftask travis' build.boot; then
+     ./boot travis && \
+      ./boot pom jar target
+    ret=$?
+  elif grep -q 'deftask test' build.boot; then
+    ./boot test && \
+      ./boot pom jar target
+    ret=$?
+  else
+    eerror "No obvious test target!, deftask test/travis"
+    ret=1
+  fi
+  set +x
+  return $ret
+}
 boot-driver() {
   local cmd=$1
   shift;
@@ -148,6 +165,7 @@ boot-driver() {
     "install-boot") install_boot "$@" ;;
     "setup-env") setup_boot_env "$@"  ;;
     "install-deps") _boot-driver-install-deps "$@" ;;
+    "test") _boot-driver-test "$@" ;;
     *) eerror "Unknown boot-driver command $cmd"; return 1 ;;
   esac
 }
