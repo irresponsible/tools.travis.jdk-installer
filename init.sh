@@ -124,12 +124,30 @@ jdk-installer() {
   esac
 }
 
+_boot-driver-install-deps() {
+  local ret;
+  set -x
+  if grep -q 'deftask travis-installdeps' build.boot; then
+    ./boot travis-installdeps
+    ret=$?
+  elif grep -q 'deftask testing' build.boot; then
+    ./boot testing show -d
+    ret=$?
+  else
+    ./boot show -d
+    ret=$?
+  fi
+  set +x
+  return $ret
+}
+
 boot-driver() {
   local cmd=$1
   shift;
   case "${cmd}" in
     "install-boot") install_boot "$@" ;;
     "setup-env") setup_boot_env "$@"  ;;
+    "install-deps") _boot-driver-install-deps "$@" ;;
     *) eerror "Unknown boot-driver command $cmd"; return 1 ;;
   esac
 }
