@@ -108,8 +108,28 @@ setup_boot_env() {
         ;;
       *)
         eerror "Unknown Clojure target ${CLOJURE}"
+        return 1;
         ;;
     esac
   fi
   set +x
+}
+
+jdk-installer() {
+  local cmd=$1
+  shift;
+  case "${cmd}" in
+    "install")  install_jdk "$@"  ;;
+    *) eerror "Unknown jdk-installer command $cmd"; return 1 ;;
+  esac
+}
+
+boot-driver() {
+  local cmd=$1
+  shift;
+  case "${cmd}" in
+    "install-boot") install_boot "$@" ;;
+    "setup-env") setup_boot_env "$@"  ;;
+    *) eerror "Unknown boot-driver command $cmd"; return 1 ;;
+  esac
 }
