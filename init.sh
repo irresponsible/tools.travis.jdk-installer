@@ -158,6 +158,19 @@ _boot-driver-test() {
   set +x
   return $ret
 }
+_boot-driver-jitpack-deploy() {
+  set -x
+  if grep -q 'deftask jitpack-deploy' build.boot; then
+     ./boot jitpack-deploy
+    ret=$?
+  else
+   ./boot pom --project "${ARTIFACT}" jar target install
+   ret=$?
+  fi
+  set +x
+  return $ret
+}
+
 boot-driver() {
   local cmd=$1
   shift;
@@ -166,6 +179,7 @@ boot-driver() {
     "setup-env") setup_boot_env "$@"  ;;
     "install-deps") _boot-driver-install-deps "$@" ;;
     "test") _boot-driver-test "$@" ;;
+    "jitpack-deploy") _boot-driver-jitpack-deploy "$@" ;;
     *) eerror "Unknown boot-driver command $cmd"; return 1 ;;
   esac
 }
