@@ -7,9 +7,11 @@ eerror() {
 
 CLOJURE_18="1.8.0"
 CLOJURE_19="1.9.0-alpha16"
+# http://www.azul.com/downloads/zulu/zulu-linux/
 ZULU7="zulu7.18.0.3-jdk7.0.141"
 ZULU8="zulu8.21.0.1-jdk8.0.131"
-ZULU9="zulu9.0.0.11-ea-jdk9.0.0"
+# http://zulu.org/zulu-9-pre-release-downloads/
+ZULU9="zulu9.0.0.12-ea-jdk9.0.0"
 
 install_zulu7() {
   mkdir -p "${HOME}/zulu" || return $?
